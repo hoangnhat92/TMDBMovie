@@ -2,7 +2,18 @@ import SwiftUI
 
 struct TrendingView: View {
     @State var viewModel: TrendingViewModel
+    @State var query: String = ""
     @Bindable var coordinator: AppCoordinator
+    
+    private var filteredMovies: [Movie] {
+        if query.isEmpty {
+            return viewModel.movies
+        } else {
+            return viewModel.movies.filter {
+                $0.title.localizedCaseInsensitiveContains(query)
+            }
+        }
+    }
 
     var body: some View {
         Group {
@@ -22,6 +33,7 @@ struct TrendingView: View {
                 movieList
             }
         }
+        .searchable(text: $query)
         .navigationTitle("Trending")
         .task {
             if viewModel.movies.isEmpty {
@@ -36,7 +48,7 @@ struct TrendingView: View {
     private var movieList: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
-                ForEach(viewModel.movies) { movie in
+                ForEach(filteredMovies) { movie in
                     Button {
                         coordinator.push(.movieDetail(movie))
                     } label: {

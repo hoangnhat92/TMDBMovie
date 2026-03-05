@@ -1,7 +1,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var coordinator = AppCoordinator()
+    @State private var trendingCoordinator = AppCoordinator()
+    @State private var searchCoordinator = AppCoordinator()
+    @State private var favoritesCoordinator = AppCoordinator()
+    
     @State private var selectedTab = 0
 
     private let movieService: MovieServiceProtocol
@@ -24,13 +27,13 @@ struct ContentView: View {
     }
 
     private var trendingTab: some View {
-        NavigationStack(path: $coordinator.path) {
+        NavigationStack(path: $trendingCoordinator.path) {
             TrendingView(
                 viewModel: TrendingViewModel(movieService: movieService),
-                coordinator: coordinator
+                coordinator: trendingCoordinator
             )
             .navigationDestination(for: Route.self) { route in
-                destinationView(for: route)
+                destinationView(for: route, coordinator: trendingCoordinator)
             }
         }
         .tabItem {
@@ -40,13 +43,13 @@ struct ContentView: View {
     }
 
     private var searchTab: some View {
-        NavigationStack {
+        NavigationStack(path: $searchCoordinator.path) {
             SearchView(
                 viewModel: SearchViewModel(movieService: movieService),
-                coordinator: coordinator
+                coordinator: searchCoordinator
             )
             .navigationDestination(for: Route.self) { route in
-                destinationView(for: route)
+                destinationView(for: route, coordinator: searchCoordinator)
             }
         }
         .tabItem {
@@ -56,13 +59,13 @@ struct ContentView: View {
     }
 
     private var favoritesTab: some View {
-        NavigationStack {
+        NavigationStack(path: $favoritesCoordinator.path) {
             FavoritesView(
                 viewModel: FavoritesViewModel(favoriteService: favoriteService),
-                coordinator: coordinator
+                coordinator: favoritesCoordinator
             )
             .navigationDestination(for: Route.self) { route in
-                destinationView(for: route)
+                destinationView(for: route, coordinator: favoritesCoordinator)
             }
         }
         .tabItem {
@@ -72,7 +75,7 @@ struct ContentView: View {
     }
 
     @ViewBuilder
-    private func destinationView(for route: Route) -> some View {
+    private func destinationView(for route: Route, coordinator: AppCoordinator) -> some View {
         switch route {
         case .movieDetail(let movie):
             MovieDetailView(
