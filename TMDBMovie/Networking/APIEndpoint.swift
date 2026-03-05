@@ -3,7 +3,7 @@ import Foundation
 nonisolated enum APIEndpoint: Sendable {
         
     private static let baseURL = "https://api.themoviedb.org/3"
-    private static let apiKey = "6d3666320ef8efa71ed3c374f65502ce"
+    private static let apiKey = Bundle.main.tmdbAPIKey
     
     case trending(page: Int)
     case search(query: String, page: Int)
