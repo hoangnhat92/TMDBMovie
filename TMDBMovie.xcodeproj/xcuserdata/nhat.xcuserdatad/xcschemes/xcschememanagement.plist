@@ -7,7 +7,35 @@
 		<key>TMDBMovie.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>TMDBMovieTests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+		<key>TMDBMovieUITests.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>64CCD4EA2F5921B1002A804D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>A08312524E704968A4A7484D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EAC9FAB078944BFBB9BCB7EA</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
