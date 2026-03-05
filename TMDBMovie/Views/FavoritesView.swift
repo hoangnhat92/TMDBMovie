@@ -15,6 +15,7 @@ struct FavoritesView: View {
                             coordinator.push(.movieDetail(movie))
                         } label: {
                             MovieCardView(movie: movie)
+                                .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
                     }
@@ -33,3 +34,14 @@ struct FavoritesView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack {
+        FavoritesView(
+            viewModel: FavoritesViewModel(favoriteService: MockFavoriteService()),
+            coordinator: AppCoordinator()
+        )
+    }
+}
+#endif

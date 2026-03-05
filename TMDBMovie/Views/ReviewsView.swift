@@ -37,3 +37,17 @@ struct ReviewsView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack {
+        ReviewsView(
+            viewModel: ReviewsViewModel(
+                movieId: 1,
+                movieTitle: "Movie 1",
+                movieService: MockMovieService()
+            )
+        )
+    }
+}
+#endif

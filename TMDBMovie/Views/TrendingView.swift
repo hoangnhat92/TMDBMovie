@@ -42,8 +42,9 @@ struct TrendingView: View {
                     } label: {
                         MovieCardView(movie: movie)
                             .padding(.horizontal)
+                            .contentShape(Rectangle())
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(.plain)                    
                     
                     Divider().padding(.leading)
                 }
@@ -59,3 +60,14 @@ struct TrendingView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack {
+        TrendingView(
+            viewModel: TrendingViewModel(movieService: MockMovieService()),
+            coordinator: AppCoordinator()
+        )
+    }
+}
+#endif

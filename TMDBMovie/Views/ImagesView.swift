@@ -54,3 +54,17 @@ struct ImagesView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack {
+        ImagesView(
+            viewModel: ImagesViewModel(
+                movieId: 1,
+                movieTitle: "Movie 1",
+                movieService: MockMovieService()
+            )
+        )
+    }
+}
+#endif

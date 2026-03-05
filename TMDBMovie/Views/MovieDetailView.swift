@@ -177,3 +177,18 @@ struct MovieDetailView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack {
+        MovieDetailView(
+            viewModel: MovieDetailViewModel(
+                movie: .sampleData,
+                movieService: MockMovieService(),
+                favoriteService: MockFavoriteService()
+            ),
+            coordinator: AppCoordinator()
+        )
+    }
+}
+#endif

@@ -32,6 +32,7 @@ struct SearchView: View {
                     } label: {
                         MovieCardView(movie: movie)
                             .padding(.horizontal)
+                            .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                     Divider().padding(.leading)
@@ -48,3 +49,14 @@ struct SearchView: View {
         }
     }
 }
+
+#if DEBUG
+#Preview {
+    NavigationStack {
+        SearchView(
+            viewModel: SearchViewModel(movieService: MockMovieService()),
+            coordinator: AppCoordinator()
+        )
+    }
+}
+#endif

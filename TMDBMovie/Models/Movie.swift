@@ -41,20 +41,3 @@ nonisolated struct Movie: Codable, Identifiable, Hashable, Sendable {
         String(format: "%.1f", voteAverage)
     }
 }
-
-#if DEBUG
-extension Movie {
-    static let sampleData = Movie(
-        id: 1,
-        title: "Movie 1",
-        overview: "Lorem ispem",
-        posterPath: "/sojEzvfxR2DBcDSJyAisX8TWjov.jpg",
-        backdropPath: "/hYgUkH7TusddHRtelj53I6gFOWR.jpg",
-        releaseDate: "2026/12/31",
-        voteAverage: 5.0,
-        voteCount: 100,
-        genreIds: [],
-        genres: []
-    )
-}
-#endif

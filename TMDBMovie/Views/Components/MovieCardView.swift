@@ -34,7 +34,7 @@ struct MovieCardView: View {
             }
 
             Spacer(minLength: 0)
-        }
+        }        
         .padding(.vertical, 4)
     }
 }
