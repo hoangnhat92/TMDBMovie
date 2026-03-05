@@ -4,9 +4,9 @@ import Foundation
 final class FavoritesViewModel {
     private(set) var movies: [Movie] = []
 
-    private let favoriteService: FavoriteServiceProtocol
+    private let favoriteService: any FavoriteServiceProtocol
 
-    init(favoriteService: FavoriteServiceProtocol = FavoriteService()) {
+    init(favoriteService: any FavoriteServiceProtocol) {
         self.favoriteService = favoriteService
     }
 

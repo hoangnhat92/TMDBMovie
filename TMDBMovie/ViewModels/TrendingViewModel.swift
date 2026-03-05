@@ -8,9 +8,9 @@ final class TrendingViewModel {
     private var currentPage = 1
     private var totalPages = 1
 
-    private let movieService: MovieServiceProtocol
+    private let movieService: any MovieServiceProtocol
 
-    init(movieService: MovieServiceProtocol = MovieService()) {
+    init(movieService: any MovieServiceProtocol) {
         self.movieService = movieService
     }
 

@@ -9,13 +9,13 @@ final class MovieDetailViewModel {
     private(set) var isFavorite = false
     private(set) var error: String?
 
-    private let movieService: MovieServiceProtocol
-    private let favoriteService: FavoriteServiceProtocol
+    private let movieService: any MovieServiceProtocol
+    private let favoriteService: any FavoriteServiceProtocol
 
     init(
         movie: Movie,
-        movieService: MovieServiceProtocol = MovieService(),
-        favoriteService: FavoriteServiceProtocol = FavoriteService()
+        movieService: any MovieServiceProtocol,
+        favoriteService: any FavoriteServiceProtocol
     ) {
         self.movie = movie
         self.movieService = movieService

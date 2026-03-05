@@ -28,7 +28,7 @@ struct SearchView: View {
             LazyVStack(spacing: 0) {
                 ForEach(viewModel.movies) { movie in
                     Button {
-                        coordinator.push(.movieDetail(movie))
+                        coordinator.push(.movie(.detail(movie)))
                     } label: {
                         MovieCardView(movie: movie)
                             .padding(.horizontal)
@@ -58,5 +58,6 @@ struct SearchView: View {
             coordinator: AppCoordinator()
         )
     }
+    .environment(\.movieService, MockMovieService())
 }
 #endif

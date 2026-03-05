@@ -4,19 +4,11 @@ struct ContentView: View {
     @State private var trendingCoordinator = AppCoordinator()
     @State private var searchCoordinator = AppCoordinator()
     @State private var favoritesCoordinator = AppCoordinator()
-    
+
     @State private var selectedTab = 0
 
-    private let movieService: MovieServiceProtocol
-    private let favoriteService: FavoriteServiceProtocol
-
-    init(
-        movieService: MovieServiceProtocol = MovieService(),
-        favoriteService: FavoriteServiceProtocol = FavoriteService()
-    ) {
-        self.movieService = movieService
-        self.favoriteService = favoriteService
-    }
+    @Environment(\.movieService) private var movieService
+    @Environment(\.favoriteService) private var favoriteService
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -77,7 +69,15 @@ struct ContentView: View {
     @ViewBuilder
     private func destinationView(for route: Route, coordinator: AppCoordinator) -> some View {
         switch route {
-        case .movieDetail(let movie):
+        case .movie(let movieRoute):
+            movieDestinationView(for: movieRoute, coordinator: coordinator)
+        }
+    }
+
+    @ViewBuilder
+    private func movieDestinationView(for route: Route.MovieRoute, coordinator: AppCoordinator) -> some View {
+        switch route {
+        case .detail(let movie):
             MovieDetailView(
                 viewModel: MovieDetailViewModel(
                     movie: movie,
@@ -86,7 +86,7 @@ struct ContentView: View {
                 ),
                 coordinator: coordinator
             )
-        case .movieImages(let movieId, let movieTitle):
+        case .images(let movieId, let movieTitle):
             ImagesView(
                 viewModel: ImagesViewModel(
                     movieId: movieId,
@@ -94,7 +94,7 @@ struct ContentView: View {
                     movieService: movieService
                 )
             )
-        case .movieReviews(let movieId, let movieTitle):
+        case .reviews(let movieId, let movieTitle):
             ReviewsView(
                 viewModel: ReviewsViewModel(
                     movieId: movieId,
@@ -107,8 +107,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(
-        movieService: MockMovieService(),
-        favoriteService: MockFavoriteService()
-    )
+    ContentView()
+        .environment(\.movieService, MockMovieService())
+        .environment(\.favoriteService, MockFavoriteService())
 }

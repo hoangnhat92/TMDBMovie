@@ -12,7 +12,7 @@ struct FavoritesView: View {
                 List {
                     ForEach(viewModel.movies) { movie in
                         Button {
-                            coordinator.push(.movieDetail(movie))
+                            coordinator.push(.movie(.detail(movie)))
                         } label: {
                             MovieCardView(movie: movie)
                                 .contentShape(Rectangle())
@@ -43,5 +43,6 @@ struct FavoritesView: View {
             coordinator: AppCoordinator()
         )
     }
+    .environment(\.favoriteService, MockFavoriteService())
 }
 #endif

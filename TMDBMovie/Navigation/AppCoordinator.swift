@@ -1,9 +1,13 @@
 import SwiftUI
 
 enum Route: Hashable {
-    case movieDetail(Movie)
-    case movieImages(movieId: Int, movieTitle: String)
-    case movieReviews(movieId: Int, movieTitle: String)
+    case movie(MovieRoute)
+
+    enum MovieRoute: Hashable {
+        case detail(Movie)
+        case images(movieId: Int, movieTitle: String)
+        case reviews(movieId: Int, movieTitle: String)
+    }
 }
 
 @Observable

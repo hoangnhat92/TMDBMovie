@@ -10,9 +10,9 @@ final class SearchViewModel {
     private var totalPages = 1
     private var currentTask: Task<Void, Never>?
 
-    private let movieService: MovieServiceProtocol
+    private let movieService: any MovieServiceProtocol
 
-    init(movieService: MovieServiceProtocol = MovieService()) {
+    init(movieService: any MovieServiceProtocol) {
         self.movieService = movieService
     }
 

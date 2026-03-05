@@ -128,10 +128,10 @@ struct MovieDetailView: View {
                         .font(.headline)
                     Spacer()
                     Button("See All") {
-                        coordinator.push(.movieImages(
+                        coordinator.push(.movie(.images(
                             movieId: viewModel.movie.id,
                             movieTitle: viewModel.movie.title
-                        ))
+                        )))
                     }
                     .font(.subheadline)
                 }
@@ -160,10 +160,10 @@ struct MovieDetailView: View {
                         .font(.headline)
                     Spacer()
                     Button("See All") {
-                        coordinator.push(.movieReviews(
+                        coordinator.push(.movie(.reviews(
                             movieId: viewModel.movie.id,
                             movieTitle: viewModel.movie.title
-                        ))
+                        )))
                     }
                     .font(.subheadline)
                 }
@@ -190,5 +190,7 @@ struct MovieDetailView: View {
             coordinator: AppCoordinator()
         )
     }
+    .environment(\.movieService, MockMovieService())
+    .environment(\.favoriteService, MockFavoriteService())
 }
 #endif

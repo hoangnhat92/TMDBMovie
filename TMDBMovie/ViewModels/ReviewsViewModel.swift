@@ -10,12 +10,12 @@ final class ReviewsViewModel {
 
     let movieId: Int
     let movieTitle: String
-    private let movieService: MovieServiceProtocol
+    private let movieService: any MovieServiceProtocol
 
     init(
         movieId: Int,
         movieTitle: String,
-        movieService: MovieServiceProtocol = MovieService()
+        movieService: any MovieServiceProtocol
     ) {
         self.movieId = movieId
         self.movieTitle = movieTitle

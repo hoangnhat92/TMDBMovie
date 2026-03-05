@@ -49,5 +49,6 @@ struct ReviewsView: View {
             )
         )
     }
+    .environment(\.movieService, MockMovieService())
 }
 #endif

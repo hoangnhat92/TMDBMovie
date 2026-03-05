@@ -50,7 +50,7 @@ struct TrendingView: View {
             LazyVStack(spacing: 0) {
                 ForEach(filteredMovies) { movie in
                     Button {
-                        coordinator.push(.movieDetail(movie))
+                        coordinator.push(.movie(.detail(movie)))
                     } label: {
                         MovieCardView(movie: movie)
                             .padding(.horizontal)
@@ -81,5 +81,6 @@ struct TrendingView: View {
             coordinator: AppCoordinator()
         )
     }
+    .environment(\.movieService, MockMovieService())
 }
 #endif

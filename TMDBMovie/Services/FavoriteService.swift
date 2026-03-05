@@ -42,3 +42,21 @@ final class FavoriteService: FavoriteServiceProtocol {
         defaults.set(data, forKey: key)
     }
 }
+
+struct UnimplementedFavoriteService: FavoriteServiceProtocol {
+    func getFavorites() -> [Movie] {
+        fatalError("FavoriteServiceProtocol.getFavorites not implemented — inject a real FavoriteService via environment")
+    }
+
+    func addFavorite(_ movie: Movie) {
+        fatalError("FavoriteServiceProtocol.addFavorite not implemented — inject a real FavoriteService via environment")
+    }
+
+    func removeFavorite(_ movie: Movie) {
+        fatalError("FavoriteServiceProtocol.removeFavorite not implemented — inject a real FavoriteService via environment")
+    }
+
+    func isFavorite(_ movie: Movie) -> Bool {
+        fatalError("FavoriteServiceProtocol.isFavorite not implemented — inject a real FavoriteService via environment")
+    }
+}

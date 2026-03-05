@@ -66,5 +66,6 @@ struct ImagesView: View {
             )
         )
     }
+    .environment(\.movieService, MockMovieService())
 }
 #endif
