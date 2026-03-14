@@ -7,7 +7,7 @@ final class ReviewsViewModel {
     private(set) var error: String?
     private var currentPage = 1
     private var totalPages = 1
-
+    private var isLoadingMore = false
     let movieId: Int
     let movieTitle: String
     private let movieService: any MovieServiceProtocol
@@ -44,8 +44,8 @@ final class ReviewsViewModel {
     }
 
     func loadMore() async {
-        guard canLoadMore else { return }
-        isLoading = true
+        guard canLoadMore, !isLoadingMore else { return }
+        isLoadingMore = true
         let nextPage = currentPage + 1
 
         do {
@@ -57,6 +57,6 @@ final class ReviewsViewModel {
             self.error = error.localizedDescription
         }
 
-        isLoading = false
+        isLoadingMore = false
     }
 }

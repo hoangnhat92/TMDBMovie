@@ -4,22 +4,55 @@ struct CachedAsyncImage: View {
     let url: URL?
     var contentMode: ContentMode = .fill
 
+    @State private var image: UIImage?
+    @State private var isFailed = false
+
     var body: some View {
-        AsyncImage(url: url) { phase in
-            switch phase {
-            case .success(let image):
-                image
+        Group {
+            if let image {
+                Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: contentMode)
-            case .failure:
+            } else if isFailed {
                 Image(systemName: "photo")
                     .font(.largeTitle)
                     .foregroundStyle(.secondary)
-            case .empty:
+            } else {
                 ProgressView()
-            @unknown default:
-                EmptyView()
             }
+        }
+        .task(id: url) {
+            await loadImage()
+        }
+        .onDisappear {
+            image = nil
+        }
+    }
+
+    private func loadImage() async {
+        isFailed = false
+        image = nil
+
+        guard let url else {
+            isFailed = true
+            return
+        }
+
+        if let cached = await ImageCache.shared.get(url) {
+            image = cached
+            return
+        }
+
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            guard let downloaded = UIImage(data: data) else {
+                isFailed = true
+                return
+            }
+            await ImageCache.shared.set(downloaded, for: url)
+            image = downloaded
+        } catch {
+            isFailed = true
         }
     }
 }

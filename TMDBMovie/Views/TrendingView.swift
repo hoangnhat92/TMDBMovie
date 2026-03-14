@@ -46,30 +46,27 @@ struct TrendingView: View {
     }
 
     private var movieList: some View {
-        ScrollView {
-            LazyVStack(spacing: 0) {
-                ForEach(filteredMovies) { movie in
-                    Button {
-                        coordinator.push(.movie(.detail(movie)))
-                    } label: {
-                        MovieCardView(movie: movie)
-                            .padding(.horizontal)
-                            .contentShape(Rectangle())
-                    }
-                    .buttonStyle(.plain)                    
-                    
-                    Divider().padding(.leading)
+        List {
+            ForEach(filteredMovies) { movie in
+                Button {
+                    coordinator.push(.movie(.detail(movie)))
+                } label: {
+                    MovieCardView(movie: movie)
                 }
+                .buttonStyle(.plain)
+            }
 
-                if viewModel.canLoadMore {
-                    ProgressView()
-                        .padding()
-                        .task {
-                            await viewModel.loadMore()
-                        }
-                }
+            if viewModel.canLoadMore {
+                ProgressView()
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .listRowSeparator(.hidden)
+                    .task {
+                        await viewModel.loadMore()
+                    }
             }
         }
+        .listStyle(.plain)
     }
 }
 

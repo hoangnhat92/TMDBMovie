@@ -5,8 +5,9 @@ final class TrendingViewModel {
     private(set) var movies: [Movie] = []
     private(set) var isLoading = false
     private(set) var error: String?
-    private var currentPage = 1
-    private var totalPages = 1
+    private(set) var currentPage = 1
+    private(set) var totalPages = 1
+    private var isLoadingMore = false
 
     private let movieService: any MovieServiceProtocol
 
@@ -15,7 +16,7 @@ final class TrendingViewModel {
     }
 
     var canLoadMore: Bool {
-        currentPage < totalPages && !isLoading
+        currentPage < totalPages
     }
 
     func loadTrending() async {
@@ -36,8 +37,8 @@ final class TrendingViewModel {
     }
 
     func loadMore() async {
-        guard canLoadMore else { return }
-        isLoading = true
+        guard canLoadMore, !isLoadingMore else { return }
+        isLoadingMore = true
         let nextPage = currentPage + 1
 
         do {
@@ -49,6 +50,6 @@ final class TrendingViewModel {
             self.error = error.localizedDescription
         }
 
-        isLoading = false
+        isLoadingMore = false
     }
 }

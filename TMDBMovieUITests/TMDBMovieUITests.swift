@@ -96,7 +96,7 @@ final class TMDBMovieUITests: XCTestCase {
             clearButton.tap()
         }
 
-        XCTAssertEqual(searchField.value as? String, "")
+        XCTAssertEqual(searchField.value as? String, "Search movies...")
     }
 
     // MARK: - Favorites Tab

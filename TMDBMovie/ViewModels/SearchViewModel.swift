@@ -6,9 +6,10 @@ final class SearchViewModel {
     private(set) var movies: [Movie] = []
     private(set) var isLoading = false
     private(set) var error: String?
-    private var currentPage = 1
-    private var totalPages = 1
-    private var currentTask: Task<Void, Never>?
+    private(set) var currentPage = 1
+    private(set) var totalPages = 1
+    private(set) var currentTask: Task<Void, Never>?
+    private var isLoadingMore = false
 
     private let movieService: any MovieServiceProtocol
 
@@ -53,11 +54,11 @@ final class SearchViewModel {
     }
 
     func loadMore() async {
-        guard canLoadMore else { return }
+        guard canLoadMore, !isLoadingMore else { return }
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
 
-        isLoading = true
+        isLoadingMore = true
         let nextPage = currentPage + 1
 
         do {
@@ -69,6 +70,6 @@ final class SearchViewModel {
             self.error = error.localizedDescription
         }
 
-        isLoading = false
+        isLoadingMore = false
     }
 }

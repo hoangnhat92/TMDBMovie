@@ -18,7 +18,7 @@ struct SearchView: View {
         }
         .navigationTitle("Search")
         .searchable(text: $viewModel.query, prompt: "Search movies...")
-        .onChange(of: viewModel.query) {
+        .task(id: viewModel.query) {
             viewModel.search()
         }
     }
@@ -35,6 +35,7 @@ struct SearchView: View {
                             .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
+                    
                     Divider().padding(.leading)
                 }
 
