@@ -3,7 +3,7 @@ import SwiftUI
 struct TrendingView: View {
     @State var viewModel: TrendingViewModel
     @State var query: String = ""
-    @Bindable var coordinator: AppCoordinator
+    @Environment(AppCoordinator.self) private var coordinator
     
     private var filteredMovies: [Movie] {
         if query.isEmpty {
@@ -73,11 +73,9 @@ struct TrendingView: View {
 #if DEBUG
 #Preview {
     NavigationStack {
-        TrendingView(
-            viewModel: TrendingViewModel(movieService: MockMovieService()),
-            coordinator: AppCoordinator()
-        )
+        TrendingView(viewModel: TrendingViewModel(movieService: MockMovieService()))
     }
+    .environment(AppCoordinator())
     .environment(\.movieService, MockMovieService())
 }
 #endif

@@ -1,108 +1,111 @@
 import SwiftUI
 
-struct ContentView: View {
-    @State private var trendingCoordinator = AppCoordinator()
-    @State private var searchCoordinator = AppCoordinator()
-    @State private var favoritesCoordinator = AppCoordinator()
+// MARK: - ContentView
 
-    @State private var selectedTab = 0
+struct ContentView: View {
+    @State private var coordinator = AppCoordinator()
 
     @Environment(\.movieService) private var movieService
     @Environment(\.favoriteService) private var favoriteService
 
     var body: some View {
-        TabView(selection: $selectedTab) {
-            trendingTab
-            searchTab
-            favoritesTab
-        }
-    }
-
-    private var trendingTab: some View {
-        NavigationStack(path: $trendingCoordinator.path) {
-            TrendingView(
-                viewModel: TrendingViewModel(movieService: movieService),
-                coordinator: trendingCoordinator
-            )
-            .navigationDestination(for: Route.self) { route in
-                destinationView(for: route, coordinator: trendingCoordinator)
+        @Bindable var coordinator = coordinator
+        TabView(selection: $coordinator.selectedTab) {
+            NavigationStack(path: $coordinator.trendingPath) {
+                TrendingView(viewModel: TrendingViewModel(movieService: movieService))
+                    .withAppDestinations()
             }
-        }
-        .tabItem {
-            Label("Trending", systemImage: "flame")
-        }
-        .tag(0)
-    }
+            .tabItem { Label("Trending", systemImage: "flame") }
+            .tag(Tab.trending)
 
-    private var searchTab: some View {
-        NavigationStack(path: $searchCoordinator.path) {
-            SearchView(
-                viewModel: SearchViewModel(movieService: movieService),
-                coordinator: searchCoordinator
-            )
-            .navigationDestination(for: Route.self) { route in
-                destinationView(for: route, coordinator: searchCoordinator)
+            NavigationStack(path: $coordinator.searchPath) {
+                SearchView(viewModel: SearchViewModel(movieService: movieService))
+                    .withAppDestinations()
             }
-        }
-        .tabItem {
-            Label("Search", systemImage: "magnifyingglass")
-        }
-        .tag(1)
-    }
+            .tabItem { Label("Search", systemImage: "magnifyingglass") }
+            .tag(Tab.search)
 
-    private var favoritesTab: some View {
-        NavigationStack(path: $favoritesCoordinator.path) {
-            FavoritesView(
-                viewModel: FavoritesViewModel(favoriteService: favoriteService),
-                coordinator: favoritesCoordinator
-            )
-            .navigationDestination(for: Route.self) { route in
-                destinationView(for: route, coordinator: favoritesCoordinator)
+            NavigationStack(path: $coordinator.favoritesPath) {
+                FavoritesView(viewModel: FavoritesViewModel(favoriteService: favoriteService))
+                    .withAppDestinations()
             }
+            .tabItem { Label("Favorites", systemImage: "heart.fill") }
+            .tag(Tab.favorites)
         }
-        .tabItem {
-            Label("Favorites", systemImage: "heart.fill")
+        .sheet(item: $coordinator.sheet) { route in
+            sheetView(for: route)
         }
-        .tag(2)
+        .environment(coordinator)
     }
 
     @ViewBuilder
-    private func destinationView(for route: Route, coordinator: AppCoordinator) -> some View {
+    private func sheetView(for route: SheetRoute) -> some View {
+        switch route {
+        case .movieDetail(let movie):
+            NavigationStack {
+                MovieDetailView(
+                    viewModel: MovieDetailViewModel(
+                        movie: movie,
+                        movieService: movieService,
+                        favoriteService: favoriteService
+                    )
+                )
+            }
+            .environment(coordinator)
+        }
+    }
+}
+
+// MARK: - Navigation Destinations
+
+private struct NavigationDestinationsModifier: ViewModifier {
+    @Environment(\.movieService) private var movieService
+    @Environment(\.favoriteService) private var favoriteService
+
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: Route.self) { route in
+                destinationView(for: route)
+            }
+    }
+
+    @ViewBuilder
+    private func destinationView(for route: Route) -> some View {
         switch route {
         case .movie(let movieRoute):
-            movieDestinationView(for: movieRoute, coordinator: coordinator)
+            switch movieRoute {
+            case .detail(let movie):
+                MovieDetailView(
+                    viewModel: MovieDetailViewModel(
+                        movie: movie,
+                        movieService: movieService,
+                        favoriteService: favoriteService
+                    )
+                )
+            case .images(let movieId, let movieTitle):
+                ImagesView(
+                    viewModel: ImagesViewModel(
+                        movieId: movieId,
+                        movieTitle: movieTitle,
+                        movieService: movieService
+                    )
+                )
+            case .reviews(let movieId, let movieTitle):
+                ReviewsView(
+                    viewModel: ReviewsViewModel(
+                        movieId: movieId,
+                        movieTitle: movieTitle,
+                        movieService: movieService
+                    )
+                )
+            }
         }
     }
+}
 
-    @ViewBuilder
-    private func movieDestinationView(for route: Route.MovieRoute, coordinator: AppCoordinator) -> some View {
-        switch route {
-        case .detail(let movie):
-            MovieDetailView(
-                viewModel: MovieDetailViewModel(
-                    movie: movie,
-                    movieService: movieService,
-                    favoriteService: favoriteService
-                ),
-                coordinator: coordinator
-            )
-        case .images(let movieId, let movieTitle):
-            ImagesView(
-                viewModel: ImagesViewModel(
-                    movieId: movieId,
-                    movieTitle: movieTitle,
-                    movieService: movieService
-                )
-            )
-        case .reviews(let movieId, let movieTitle):
-            ReviewsView(
-                viewModel: ReviewsViewModel(
-                    movieId: movieId,
-                    movieTitle: movieTitle,
-                    movieService: movieService
-                )
-            )
-        }
+private extension View {
+    func withAppDestinations() -> some View {
+        modifier(NavigationDestinationsModifier())
     }
 }
 

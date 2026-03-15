@@ -2,7 +2,7 @@ import SwiftUI
 
 struct FavoritesView: View {
     @State var viewModel: FavoritesViewModel
-    @Bindable var coordinator: AppCoordinator
+    @Environment(AppCoordinator.self) private var coordinator
 
     var body: some View {
         Group {
@@ -38,11 +38,9 @@ struct FavoritesView: View {
 #if DEBUG
 #Preview {
     NavigationStack {
-        FavoritesView(
-            viewModel: FavoritesViewModel(favoriteService: MockFavoriteService()),
-            coordinator: AppCoordinator()
-        )
+        FavoritesView(viewModel: FavoritesViewModel(favoriteService: MockFavoriteService()))
     }
+    .environment(AppCoordinator())
     .environment(\.favoriteService, MockFavoriteService())
 }
 #endif

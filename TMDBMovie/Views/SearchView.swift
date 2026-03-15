@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SearchView: View {
     @State var viewModel: SearchViewModel
-    @Bindable var coordinator: AppCoordinator
+    @Environment(AppCoordinator.self) private var coordinator
 
     var body: some View {
         Group {
@@ -54,11 +54,9 @@ struct SearchView: View {
 #if DEBUG
 #Preview {
     NavigationStack {
-        SearchView(
-            viewModel: SearchViewModel(movieService: MockMovieService()),
-            coordinator: AppCoordinator()
-        )
+        SearchView(viewModel: SearchViewModel(movieService: MockMovieService()))
     }
+    .environment(AppCoordinator())
     .environment(\.movieService, MockMovieService())
 }
 #endif

@@ -5,7 +5,7 @@ actor ImageCache {
 
     private let cache = NSCache<NSURL, UIImage>()
 
-    private init() {
+    init() {
         cache.totalCostLimit = 50 * 1024 * 1024 // 50 MB
     }
 

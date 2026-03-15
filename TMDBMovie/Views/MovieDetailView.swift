@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MovieDetailView: View {
     @State var viewModel: MovieDetailViewModel
-    @Bindable var coordinator: AppCoordinator
+    @Environment(AppCoordinator.self) private var coordinator
 
     var body: some View {
         ScrollView {
@@ -186,10 +186,10 @@ struct MovieDetailView: View {
                 movie: .sampleData,
                 movieService: MockMovieService(),
                 favoriteService: MockFavoriteService()
-            ),
-            coordinator: AppCoordinator()
+            )
         )
     }
+    .environment(AppCoordinator())
     .environment(\.movieService, MockMovieService())
     .environment(\.favoriteService, MockFavoriteService())
 }
