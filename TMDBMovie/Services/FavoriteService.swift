@@ -10,35 +10,38 @@ protocol FavoriteServiceProtocol {
 final class FavoriteService: FavoriteServiceProtocol {
     private let defaults: UserDefaults
     private let key = "favorite_movies"
+    private lazy var cachedFavorites: [Movie] = loadFromDisk()
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
     }
 
     func getFavorites() -> [Movie] {
+        cachedFavorites
+    }
+
+    func addFavorite(_ movie: Movie) {
+        guard !cachedFavorites.contains(where: { $0.id == movie.id }) else { return }
+        cachedFavorites.append(movie)
+        persist()
+    }
+
+    func removeFavorite(_ movie: Movie) {
+        cachedFavorites.removeAll { $0.id == movie.id }
+        persist()
+    }
+
+    func isFavorite(_ movie: Movie) -> Bool {
+        cachedFavorites.contains { $0.id == movie.id }
+    }
+
+    private func loadFromDisk() -> [Movie] {
         guard let data = defaults.data(forKey: key) else { return [] }
         return (try? JSONDecoder().decode([Movie].self, from: data)) ?? []
     }
 
-    func addFavorite(_ movie: Movie) {
-        var favorites = getFavorites()
-        guard !favorites.contains(where: { $0.id == movie.id }) else { return }
-        favorites.append(movie)
-        save(favorites)
-    }
-
-    func removeFavorite(_ movie: Movie) {
-        var favorites = getFavorites()
-        favorites.removeAll { $0.id == movie.id }
-        save(favorites)
-    }
-
-    func isFavorite(_ movie: Movie) -> Bool {
-        getFavorites().contains { $0.id == movie.id }
-    }
-
-    private func save(_ movies: [Movie]) {
-        let data = try? JSONEncoder().encode(movies)
+    private func persist() {
+        let data = try? JSONEncoder().encode(cachedFavorites)
         defaults.set(data, forKey: key)
     }
 }
