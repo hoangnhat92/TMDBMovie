@@ -28,9 +28,13 @@ final class MovieDetailViewModel {
         error = nil
 
         do {
-            movie = try await movieService.fetchMovieDetail(id: movie.id)
-            images = try await movieService.fetchMovieImages(id: movie.id)
-            let reviewsResponse = try await movieService.fetchMovieReviews(id: movie.id, page: 1)
+            async let detailTask = movieService.fetchMovieDetail(id: movie.id)
+            async let imagesTask = movieService.fetchMovieImages(id: movie.id)
+            async let reviewsTask = movieService.fetchMovieReviews(id: movie.id, page: 1)
+
+            let (detail, imgs, reviewsResponse) = try await (detailTask, imagesTask, reviewsTask)
+            movie = detail
+            images = imgs
             reviews = reviewsResponse.results
         } catch {
             self.error = error.localizedDescription

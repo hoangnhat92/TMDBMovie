@@ -4,6 +4,9 @@ struct CachedAsyncImage: View {
     let url: URL?
     var contentMode: ContentMode = .fill
 
+    @Environment(\.imageCache) private var cache
+    @Environment(\.imageLoader) private var loader
+
     @State private var image: UIImage?
     @State private var isFailed = false
 
@@ -38,18 +41,18 @@ struct CachedAsyncImage: View {
             return
         }
 
-        if let cached = await ImageCache.shared.get(url) {
+        if let cached = await cache.get(url) {
             image = cached
             return
         }
 
         do {
-            let (data, _) = try await URLSession.shared.data(from: url)
+            let data = try await loader.loadImageData(from: url)
             guard let downloaded = UIImage(data: data) else {
                 isFailed = true
                 return
             }
-            await ImageCache.shared.set(downloaded, for: url)
+            await cache.set(downloaded, for: url)
             image = downloaded
         } catch {
             isFailed = true
